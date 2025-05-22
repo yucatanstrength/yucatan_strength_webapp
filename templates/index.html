@@ -1,12 +1,94 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Yucatán Strength</title>
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;700&family=Libre+Baskerville&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      color: white;
+      font-family: 'League Spartan', sans-serif;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1, h2 {
+      color: #f6d393;
+      text-align: center;
+    }
+    .card {
+      background: #111;
+      border: 1px solid #f6d393;
+      border-radius: 12px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    .result {
+      color: #f6d393;
+      font-weight: bold;
+      text-align: center;
+    }
+    .share-text {
+      font-size: 0.9rem;
+      font-family: 'Libre Baskerville', serif;
+      text-align: center;
+      margin-top: 1rem;
+      color: #ccc;
+    }
+    .footer {
+      text-align: center;
+      font-size: 0.8rem;
+      margin-top: 2rem;
+      color: #777;
+      font-family: 'Libre Baskerville', serif;
+    }
+    button {
+      background-color: #f6d393;
+      color: black;
+      font-weight: bold;
+      padding: 0.6rem;
+      width: 100%;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
   <h1>Welcome to Yucatán Strength Tools</h1>
-  <p>This is your frontend. Backend is Flask. Ready to deploy.</p>
+
+  <div class="card">
+    <h2>Yucatán Health Score</h2>
+    <p>Track your daily health strength. Enter values to calculate your 0–100 score.</p>
+    <div class="result">Score: 91 — Tier: Jaguar 🐆</div>
+    <div class="share-text">“I got a 91 Health Score — beat me.”</div>
+  </div>
+
+  <div class="card">
+    <h2>Macro Calculator</h2>
+    <p>Enter your goals and TDEE to get your macros. Simple, effective, no BS.</p>
+    <div class="result">Calories: 2700 | P: 180g | F: 70g | C: 310g</div>
+    <div class="share-text">“Macros calculated. No guesswork. Use this and a food scale — get shredded.”</div>
+  </div>
+
+  <div class="card">
+    <h2>Animal Tier System</h2>
+    <p>Your score places you in a power tier:</p>
+    <ul>
+      <li>🦥 Armadillo — Beginner</li>
+      <li>🐒 Spider Monkey — Intermediate</li>
+      <li>🐆 Jaguar — Advanced</li>
+      <li>🦅 Eagle — Elite</li>
+      <li>⚔️ WARRIOR — Unbreakable</li>
+    </ul>
+    <div class="share-text">“I just hit Jaguar Tier on Yucatán Strength. Let’s see your rank.”</div>
+  </div>
+
+  <div class="footer">
+    In Lak’Ech Ala K’in<br>
+    <a href="https://georgealuke.pythonanywhere.com" target="_blank" style="color:#f6d393;">Apply for 1-on-1 fitness coaching →</a>
+  </div>
 </body>
 </html>
