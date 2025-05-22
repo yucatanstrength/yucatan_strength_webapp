@@ -1,6 +1,6 @@
+
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
-import math, os
 
 app = Flask(__name__)
 CORS(app)
@@ -9,59 +9,53 @@ CORS(app)
 def home():
     return render_template("index.html")
 
-# Placeholder for all calculator routes
-
-if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
-
-
-@app.route('/tdee', methods=['POST'])
+@app.route("/tdee", methods=["POST"])
 def tdee():
-    data = request.json
-    weight = data['weight']
-    height = data['height']
-    age = data['age']
-    gender = data['gender']
-    activity = data['activity']
+    data = request.get_json()
+    gender = data.get("gender")
+    age = data.get("age")
+    height = data.get("height")  # in cm
+    weight = data.get("weight")  # in kg
+    activity = data.get("activity")
 
-    if gender == 'male':
+    # BMR (Mifflin-St Jeor)
+    if gender == "male":
         bmr = 10 * weight + 6.25 * height - 5 * age + 5
     else:
         bmr = 10 * weight + 6.25 * height - 5 * age - 161
 
     multiplier = {
-        'sedentary': 1.2,
-        'light': 1.375,
-        'moderate': 1.55,
-        'active': 1.725,
-        'very_active': 1.9
-    }
-    tdee_val = round(bmr * multiplier.get(activity, 1.2), 2)
-    return jsonify({'tdee': tdee_val})
+        "sedentary": 1.2,
+        "light": 1.375,
+        "moderate": 1.55,
+        "active": 1.725,
+        "very_active": 1.9
+    }.get(activity, 1.55)
 
-@app.route('/macros', methods=['POST'])
+    tdee = round(bmr * multiplier)
+    return jsonify({"tdee": tdee})
+
+@app.route("/macros", methods=["POST"])
 def macros():
-    data = request.json
-    tdee = data['tdee']
-    goal = data['goal']
-    preference = data['preference']
+    data = request.get_json()
+    tdee = data.get("tdee", 2500)
+    goal = data.get("goal", "maintain")
 
-    if goal == 'cut':
+    if goal == "cut":
         tdee -= 500
-    elif goal == 'bulk':
-        tdee += 500
+    elif goal == "bulk":
+        tdee += 250
 
-    if preference == 'balanced':
-        protein_ratio, fat_ratio = 0.3, 0.25
-    elif preference == 'high_protein':
-        protein_ratio, fat_ratio = 0.4, 0.2
-    elif preference == 'high_carb':
-        protein_ratio, fat_ratio = 0.25, 0.2
-    else:
-        protein_ratio, fat_ratio = 0.3, 0.25
-
-    protein = round((tdee * protein_ratio) / 4)
-    fats = round((tdee * fat_ratio) / 9)
+    protein = round((0.8 * tdee) / 4)
+    fats = round((0.25 * tdee) / 9)
     carbs = round((tdee - (protein * 4 + fats * 9)) / 4)
 
-    return jsonify({'calories': tdee, 'protein': protein, 'fats': fats, 'carbs': carbs})
+    return jsonify({
+        "calories": round(tdee),
+        "protein": protein,
+        "fats": fats,
+        "carbs": carbs
+    })
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000, debug=True)
