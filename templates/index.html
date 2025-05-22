@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -48,15 +47,12 @@
 
   <div class="tile" id="tdee-tile">
     <h2>Total Daily Energy Expenditure</h2>
-    <select id="gender">
-      <option value="male">Male</option>
-      <option value="female">Female</option>
-    </select>
+    <select id="gender"><option value="male">Male</option><option value="female">Female</option></select>
     <select id="age"></select>
     <select id="height"></select>
     <select id="weight"></select>
     <select id="activity">
-      <option value="sedentary">Sedentary (no exercise)</option>
+      <option value="sedentary">Sedentary</option>
       <option value="light">Light Activity (1–2x/week)</option>
       <option value="moderate">Moderate (3–4x/week)</option>
       <option value="active">Active (5–6x/week)</option>
@@ -68,40 +64,35 @@
 
   <div class="tile" id="macro-tile">
     <h2>Macronutrient Calculator</h2>
-    <select id="goal">
-      <option value="cut">Fat Loss</option>
-      <option value="maintain">Maintenance</option>
-      <option value="bulk">Muscle Gain</option>
-    </select>
-    <select id="preference">
-      <option value="balanced">Balanced</option>
-      <option value="high_protein">High Protein</option>
-      <option value="high_carb">High Carb</option>
-    </select>
+    <select id="goal"><option value="cut">Fat Loss</option><option value="maintain">Maintenance</option><option value="bulk">Muscle Gain</option></select>
+    <select id="preference"><option value="balanced">Balanced</option><option value="high_protein">High Protein</option><option value="high_carb">High Carb</option></select>
     <button onclick="calculateMacros()">Calculate Macros</button>
     <div class="result" id="macro-result"></div>
   </div>
 
   <script>
+    const heightData = [["4'0\" | 121.92 cm", 121.92], ["4'1\" | 124.46 cm", 124.46], ["4'2\" | 127.0 cm", 127.0], ["4'3\" | 129.54 cm", 129.54], ["4'4\" | 132.08 cm", 132.08], ["4'5\" | 134.62 cm", 134.62], ["4'6\" | 137.16 cm", 137.16], ["4'7\" | 139.7 cm", 139.7], ["4'8\" | 142.24 cm", 142.24], ["4'9\" | 144.78 cm", 144.78], ["4'10\" | 147.32 cm", 147.32], ["4'11\" | 149.86 cm", 149.86], ["5'0\" | 152.4 cm", 152.4], ["5'1\" | 154.94 cm", 154.94], ["5'2\" | 157.48 cm", 157.48], ["5'3\" | 160.02 cm", 160.02], ["5'4\" | 162.56 cm", 162.56], ["5'5\" | 165.1 cm", 165.1], ["5'6\" | 167.64 cm", 167.64], ["5'7\" | 170.18 cm", 170.18], ["5'8\" | 172.72 cm", 172.72], ["5'9\" | 175.26 cm", 175.26], ["5'10\" | 177.8 cm", 177.8], ["5'11\" | 180.34 cm", 180.34], ["6'0\" | 182.88 cm", 182.88], ["6'1\" | 185.42 cm", 185.42], ["6'2\" | 187.96 cm", 187.96], ["6'3\" | 190.5 cm", 190.5], ["6'4\" | 193.04 cm", 193.04], ["6'5\" | 195.58 cm", 195.58], ["6'6\" | 198.12 cm", 198.12], ["6'7\" | 200.66 cm", 200.66], ["6'8\" | 203.2 cm", 203.2], ["6'9\" | 205.74 cm", 205.74], ["6'10\" | 208.28 cm", 208.28], ["6'11\" | 210.82 cm", 210.82], ["7'0\" | 213.36 cm", 213.36]];
+    const weightData = [["40 lbs | 18.14 kg", 18.14], ["45 lbs | 20.41 kg", 20.41], ["50 lbs | 22.68 kg", 22.68], ["55 lbs | 24.95 kg", 24.95], ["60 lbs | 27.22 kg", 27.22], ["65 lbs | 29.48 kg", 29.48], ["70 lbs | 31.75 kg", 31.75], ["75 lbs | 34.02 kg", 34.02], ["80 lbs | 36.29 kg", 36.29], ["85 lbs | 38.56 kg", 38.56], ["90 lbs | 40.82 kg", 40.82], ["95 lbs | 43.09 kg", 43.09], ["100 lbs | 45.36 kg", 45.36], ["105 lbs | 47.63 kg", 47.63], ["110 lbs | 49.9 kg", 49.9], ["115 lbs | 52.16 kg", 52.16], ["120 lbs | 54.43 kg", 54.43], ["125 lbs | 56.7 kg", 56.7], ["130 lbs | 58.97 kg", 58.97], ["135 lbs | 61.23 kg", 61.23], ["140 lbs | 63.5 kg", 63.5], ["145 lbs | 65.77 kg", 65.77], ["150 lbs | 68.04 kg", 68.04], ["155 lbs | 70.31 kg", 70.31], ["160 lbs | 72.57 kg", 72.57], ["165 lbs | 74.84 kg", 74.84], ["170 lbs | 77.11 kg", 77.11], ["175 lbs | 79.38 kg", 79.38], ["180 lbs | 81.65 kg", 81.65], ["185 lbs | 83.91 kg", 83.91], ["190 lbs | 86.18 kg", 86.18], ["195 lbs | 88.45 kg", 88.45], ["200 lbs | 90.72 kg", 90.72], ["205 lbs | 92.99 kg", 92.99], ["210 lbs | 95.25 kg", 95.25], ["215 lbs | 97.52 kg", 97.52], ["220 lbs | 99.79 kg", 99.79], ["225 lbs | 102.06 kg", 102.06], ["230 lbs | 104.33 kg", 104.33], ["235 lbs | 106.59 kg", 106.59], ["240 lbs | 108.86 kg", 108.86], ["245 lbs | 111.13 kg", 111.13], ["250 lbs | 113.4 kg", 113.4], ["255 lbs | 115.67 kg", 115.67], ["260 lbs | 117.93 kg", 117.93], ["265 lbs | 120.2 kg", 120.2], ["270 lbs | 122.47 kg", 122.47], ["275 lbs | 124.74 kg", 124.74], ["280 lbs | 127.01 kg", 127.01], ["285 lbs | 129.27 kg", 129.27], ["290 lbs | 131.54 kg", 131.54], ["295 lbs | 133.81 kg", 133.81], ["300 lbs | 136.08 kg", 136.08], ["305 lbs | 138.35 kg", 138.35], ["310 lbs | 140.61 kg", 140.61], ["315 lbs | 142.88 kg", 142.88], ["320 lbs | 145.15 kg", 145.15], ["325 lbs | 147.42 kg", 147.42], ["330 lbs | 149.69 kg", 149.69], ["335 lbs | 151.95 kg", 151.95], ["340 lbs | 154.22 kg", 154.22], ["345 lbs | 156.49 kg", 156.49], ["350 lbs | 158.76 kg", 158.76], ["355 lbs | 161.03 kg", 161.03], ["360 lbs | 163.29 kg", 163.29], ["365 lbs | 165.56 kg", 165.56], ["370 lbs | 167.83 kg", 167.83], ["375 lbs | 170.1 kg", 170.1], ["380 lbs | 172.36 kg", 172.36], ["385 lbs | 174.63 kg", 174.63], ["390 lbs | 176.9 kg", 176.9], ["395 lbs | 179.17 kg", 179.17], ["400 lbs | 181.44 kg", 181.44], ["405 lbs | 183.7 kg", 183.7], ["410 lbs | 185.97 kg", 185.97], ["415 lbs | 188.24 kg", 188.24], ["420 lbs | 190.51 kg", 190.51], ["425 lbs | 192.78 kg", 192.78], ["430 lbs | 195.04 kg", 195.04], ["435 lbs | 197.31 kg", 197.31], ["440 lbs | 199.58 kg", 199.58], ["445 lbs | 201.85 kg", 201.85], ["450 lbs | 204.12 kg", 204.12], ["455 lbs | 206.38 kg", 206.38], ["460 lbs | 208.65 kg", 208.65], ["465 lbs | 210.92 kg", 210.92], ["470 lbs | 213.19 kg", 213.19], ["475 lbs | 215.46 kg", 215.46], ["480 lbs | 217.72 kg", 217.72], ["485 lbs | 219.99 kg", 219.99], ["490 lbs | 222.26 kg", 222.26], ["495 lbs | 224.53 kg", 224.53], ["500 lbs | 226.8 kg", 226.8], ["505 lbs | 229.06 kg", 229.06], ["510 lbs | 231.33 kg", 231.33], ["515 lbs | 233.6 kg", 233.6], ["520 lbs | 235.87 kg", 235.87], ["525 lbs | 238.14 kg", 238.14], ["530 lbs | 240.4 kg", 240.4], ["535 lbs | 242.67 kg", 242.67], ["540 lbs | 244.94 kg", 244.94], ["545 lbs | 247.21 kg", 247.21], ["550 lbs | 249.48 kg", 249.48], ["555 lbs | 251.74 kg", 251.74], ["560 lbs | 254.01 kg", 254.01], ["565 lbs | 256.28 kg", 256.28], ["570 lbs | 258.55 kg", 258.55], ["575 lbs | 260.82 kg", 260.82], ["580 lbs | 263.08 kg", 263.08], ["585 lbs | 265.35 kg", 265.35], ["590 lbs | 267.62 kg", 267.62], ["595 lbs | 269.89 kg", 269.89], ["600 lbs | 272.16 kg", 272.16], ["605 lbs | 274.42 kg", 274.42], ["610 lbs | 276.69 kg", 276.69], ["615 lbs | 278.96 kg", 278.96], ["620 lbs | 281.23 kg", 281.23], ["625 lbs | 283.5 kg", 283.5], ["630 lbs | 285.76 kg", 285.76], ["635 lbs | 288.03 kg", 288.03], ["640 lbs | 290.3 kg", 290.3], ["645 lbs | 292.57 kg", 292.57], ["650 lbs | 294.83 kg", 294.83], ["655 lbs | 297.1 kg", 297.1], ["660 lbs | 299.37 kg", 299.37], ["665 lbs | 301.64 kg", 301.64], ["670 lbs | 303.91 kg", 303.91], ["675 lbs | 306.17 kg", 306.17], ["680 lbs | 308.44 kg", 308.44], ["685 lbs | 310.71 kg", 310.71], ["690 lbs | 312.98 kg", 312.98], ["695 lbs | 315.25 kg", 315.25], ["700 lbs | 317.51 kg", 317.51]];
+
+    heightData.forEach(h => {
+      let opt = document.createElement('option');
+      opt.value = h[1];
+      opt.text = h[0];
+      document.getElementById('height').appendChild(opt);
+    });
+
+    weightData.forEach(w => {
+      let opt = document.createElement('option');
+      opt.value = w[1];
+      opt.text = w[0];
+      document.getElementById('weight').appendChild(opt);
+    });
+
     for (let i = 13; i <= 80; i++) {
       let opt = document.createElement('option');
       opt.value = i;
-      opt.text = i + ' yrs';
+      opt.text = i + " yrs";
       document.getElementById('age').appendChild(opt);
-    }
-
-    for (let i = 140; i <= 210; i++) {
-      let opt = document.createElement('option');
-      opt.value = i;
-      opt.text = i + ' cm';
-      document.getElementById('height').appendChild(opt);
-    }
-
-    for (let i = 40; i <= 700; i += 5) {
-      let opt = document.createElement('option');
-      opt.value = i;
-      opt.text = i + ' lbs';
-      document.getElementById('weight').appendChild(opt);
     }
 
     async function calculateTDEE() {
@@ -109,7 +100,7 @@
         gender: document.getElementById('gender').value,
         age: parseInt(document.getElementById('age').value),
         height: parseFloat(document.getElementById('height').value),
-        weight: parseFloat(document.getElementById('weight').value) * 0.453592,
+        weight: parseFloat(document.getElementById('weight').value),
         activity: document.getElementById('activity').value
       };
 
@@ -118,6 +109,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body)
       });
+
       const data = await res.json();
       window.tdeeGlobal = data.tdee;
       document.getElementById('tdee-result').innerText = `Your TDEE: ${Math.round(data.tdee)} kcal/day`;
@@ -133,6 +125,7 @@
           preference: document.getElementById('preference').value
         })
       });
+
       const data = await res.json();
       document.getElementById('macro-result').innerText =
         `Calories: ${data.calories} | Protein: ${data.protein}g | Fats: ${data.fats}g | Carbs: ${data.carbs}g`;
