@@ -66,11 +66,11 @@
 
   <div class="tile" id="tdee-tile">
     <h2>Total Daily Energy Expenditure</h2>
-    <select id="gender"><option value="male">Male</option><option value="female">Female</option></select>
-    <select id="age"></select>
-    <select id="height"></select>
-    <select id="weight"></select>
-    <select id="activity">
+    <select id="gender" onchange="calculateTDEE()"><option value="male">Male</option><option value="female">Female</option></select>
+    <select id="age" onchange="calculateTDEE()"></select>
+    <select id="height" onchange="calculateTDEE()"></select>
+    <select id="weight" onchange="calculateTDEE()"></select>
+    <select id="activity" onchange="calculateTDEE()">
       <option value="sedentary">Sedentary</option>
       <option value="light">Light Activity (1–2x/week)</option>
       <option value="moderate">Moderate (3–4x/week)</option>
@@ -78,29 +78,29 @@
       <option value="very_active">Very Active (daily intense)</option>
     </select>
     <div class="result-box" id="tdee-result">Your TDEE will appear here.</div>
-    <button onclick="calculateTDEE()">Calculate TDEE</button>
+    
   </div>
 
   <div class="tile" id="macro-tile">
     <h2>Macronutrient Calculator</h2>
-    <select id="macro-gender"><option value="male">Male</option><option value="female">Female</option></select>
-    <select id="macro-age"></select>
-    <select id="macro-height"></select>
-    <select id="macro-weight"></select>
-    <select id="macro-activity">
+    <select id="macro-gender" onchange="calculateMacros()"><option value="male">Male</option><option value="female">Female</option></select>
+    <select id="macro-age" onchange="calculateMacros()"></select>
+    <select id="macro-height" onchange="calculateMacros()"></select>
+    <select id="macro-weight" onchange="calculateMacros()"></select>
+    <select id="macro-activity" onchange="calculateMacros()">
       <option value="sedentary">Sedentary</option>
       <option value="light">Light Activity (1–2x/week)</option>
       <option value="moderate">Moderate (3–4x/week)</option>
       <option value="active">Active (5–6x/week)</option>
       <option value="very_active">Very Active (daily intense)</option>
     </select>
-    <select id="goal">
+    <select id="goal" onchange="calculateMacros()">
       <option value="maintain">Maintenance</option>
       <option value="cut">Fat Loss</option>
       <option value="bulk">Muscle Gain</option>
     </select>
     <div class="result-box" id="macro-result">Your macros will appear here.</div>
-    <button onclick="calculateMacros()">Calculate Macros</button>
+    
   </div>
 
   <div class="footer">
