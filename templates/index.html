@@ -54,41 +54,62 @@
       border-radius: 6px;
       cursor: pointer;
     }
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.25rem 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-family: 'Libre Baskerville', serif;
+    }
   </style>
 </head>
 <body>
-  <h1>Welcome to Yucatán Strength Tools</h1>
+  <h1>Yucatán Strength Tools</h1>
 
   <div class="card">
-    <h2>Yucatán Health Score</h2>
-    <p>Track your daily health strength. Enter values to calculate your 0–100 score.</p>
-    <div class="result">Score: 91 — Tier: Jaguar 🐆</div>
-    <div class="share-text">“I got a 91 Health Score — beat me.”</div>
-  </div>
-
-  <div class="card">
-    <h2>Macro Calculator</h2>
-    <p>Enter your goals and TDEE to get your macros. Simple, effective, no BS.</p>
-    <div class="result">Calories: 2700 | P: 180g | F: 70g | C: 310g</div>
-    <div class="share-text">“Macros calculated. No guesswork. Use this and a food scale — get shredded.”</div>
-  </div>
-
-  <div class="card">
-    <h2>Animal Tier System</h2>
-    <p>Your score places you in a power tier:</p>
-    <ul>
-      <li>🦥 Armadillo — Beginner</li>
-      <li>🐒 Spider Monkey — Intermediate</li>
-      <li>🐆 Jaguar — Advanced</li>
-      <li>🦅 Eagle — Elite</li>
-      <li>⚔️ WARRIOR — Unbreakable</li>
-    </ul>
-    <div class="share-text">“I just hit Jaguar Tier on Yucatán Strength. Let’s see your rank.”</div>
+    <h2>Health Score</h2>
+    <input type="number" id="weight" placeholder="Weight (kg)" />
+    <input type="number" id="height" placeholder="Height (cm)" />
+    <input type="number" id="waist" placeholder="Waist (cm)" />
+    <input type="number" id="hips" placeholder="Hips (cm)" />
+    <input type="number" id="sleep" placeholder="Sleep (hrs)" />
+    <input type="number" id="water" placeholder="Water (liters)" />
+    <input type="number" id="hrv" placeholder="HRV estimate (1–100)" />
+    <input type="number" id="mood" placeholder="Mood (1–10)" />
+    <button onclick="getHealthScore()">Calculate Health Score</button>
+    <div class="result" id="health-result"></div>
+    <div class="share-text" id="health-share"></div>
   </div>
 
   <div class="footer">
     In Lak’Ech Ala K’in<br>
     <a href="https://georgealuke.pythonanywhere.com" target="_blank" style="color:#f6d393;">Apply for 1-on-1 fitness coaching →</a>
   </div>
+
+  <script>
+    async function getHealthScore() {
+      const body = {
+        weight: parseFloat(document.getElementById('weight').value),
+        height: parseFloat(document.getElementById('height').value),
+        waist: parseFloat(document.getElementById('waist').value),
+        hips: parseFloat(document.getElementById('hips').value),
+        sleep: parseFloat(document.getElementById('sleep').value),
+        water: parseFloat(document.getElementById('water').value),
+        hrv: parseFloat(document.getElementById('hrv').value),
+        mood: parseFloat(document.getElementById('mood').value)
+      };
+
+      const res = await fetch('/healthscore', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+
+      const data = await res.json();
+      document.getElementById('health-result').innerText = `Score: ${data.score} — Tier: ${data.tier}`;
+      document.getElementById('health-share').innerText = `“I got a ${data.score} Health Score — ${data.tier}. Try it at yucatan-strength.onrender.com”`;
+    }
+  </script>
 </body>
 </html>
