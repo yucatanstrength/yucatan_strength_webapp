@@ -1,47 +1,50 @@
 
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Yucatán Strength</title>
+  <title>Yucatán Strength Tools</title>
   <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@500;700&family=Libre+Baskerville&display=swap" rel="stylesheet">
   <style>
     body {
       background-color: #000;
-      color: white;
+      color: #f6d393;
       font-family: 'League Spartan', sans-serif;
       margin: 0;
       padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
-    h1, h2 {
-      color: #f6d393;
+    h1 {
+      font-size: 2rem;
       text-align: center;
+      margin-bottom: 2rem;
     }
-    .card {
-      background: #111;
+    .tool-card {
+      background-color: #111;
       border: 1px solid #f6d393;
-      border-radius: 12px;
-      padding: 1rem;
-      margin: 1rem 0;
+      border-radius: 16px;
+      padding: 1.5rem;
+      margin: 1rem;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 0 10px #f6d39355;
     }
-    .result {
+    .tool-card h2 {
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
       color: #f6d393;
-      font-weight: bold;
-      text-align: center;
     }
-    .share-text {
-      font-size: 0.9rem;
-      font-family: 'Libre Baskerville', serif;
-      text-align: center;
-      margin-top: 1rem;
-      color: #ccc;
-    }
-    .footer {
-      text-align: center;
-      font-size: 0.8rem;
-      margin-top: 2rem;
-      color: #777;
+    input {
+      width: 100%;
+      padding: 0.5rem;
+      margin: 0.4rem 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      background: #222;
+      color: white;
       font-family: 'Libre Baskerville', serif;
     }
     button {
@@ -53,38 +56,48 @@
       border: none;
       border-radius: 6px;
       cursor: pointer;
+      margin-top: 0.5rem;
     }
-    input, select {
-      width: 100%;
-      padding: 0.5rem;
-      margin: 0.25rem 0;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+    .result {
+      text-align: center;
+      font-size: 1rem;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+    .footer {
+      text-align: center;
+      font-size: 0.8rem;
+      margin-top: 2rem;
+      color: #888;
       font-family: 'Libre Baskerville', serif;
+    }
+    a {
+      color: #f6d393;
+      text-decoration: none;
     }
   </style>
 </head>
 <body>
   <h1>Yucatán Strength Tools</h1>
 
-  <div class="card">
-    <h2>Health Score</h2>
+  <div class="tool-card">
+    <h2>Yucatán Health Score</h2>
     <input type="number" id="weight" placeholder="Weight (kg)" />
     <input type="number" id="height" placeholder="Height (cm)" />
     <input type="number" id="waist" placeholder="Waist (cm)" />
     <input type="number" id="hips" placeholder="Hips (cm)" />
     <input type="number" id="sleep" placeholder="Sleep (hrs)" />
     <input type="number" id="water" placeholder="Water (liters)" />
-    <input type="number" id="hrv" placeholder="HRV estimate (1–100)" />
+    <input type="number" id="hrv" placeholder="HRV (1–100)" />
     <input type="number" id="mood" placeholder="Mood (1–10)" />
-    <button onclick="getHealthScore()">Calculate Health Score</button>
+    <button onclick="getHealthScore()">Calculate</button>
     <div class="result" id="health-result"></div>
-    <div class="share-text" id="health-share"></div>
+    <div class="result" id="health-share"></div>
   </div>
 
   <div class="footer">
     In Lak’Ech Ala K’in<br>
-    <a href="https://georgealuke.pythonanywhere.com" target="_blank" style="color:#f6d393;">Apply for 1-on-1 fitness coaching →</a>
+    <a href="https://georgealuke.pythonanywhere.com" target="_blank">Apply for 1-on-1 fitness coaching →</a>
   </div>
 
   <script>
