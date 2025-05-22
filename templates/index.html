@@ -77,7 +77,7 @@
       <option value="active">Active (5–6x/week)</option>
       <option value="very_active">Very Active (daily intense)</option>
     </select>
-    <div class="result-box" id="tdee-result">Your TDEE will appear here.</div>
+    <div class="result-box" id="tdee-result"><span id="tdee-result">Awaiting input...</span> kcal/day</div>
     
   </div>
 
@@ -99,7 +99,12 @@
       <option value="cut">Fat Loss</option>
       <option value="bulk">Muscle Gain</option>
     </select>
-    <div class="result-box" id="macro-result">Your macros will appear here.</div>
+    <div class="result-box" id="macro-result">
+<span id="macro-calories">Calories: --</span><br>
+<span id="macro-protein">Protein: -- g</span><br>
+<span id="macro-fats">Fats: -- g</span><br>
+<span id="macro-carbs">Carbs: -- g</span>
+</div>
     
   </div>
 
@@ -154,7 +159,7 @@
       });
       const data = await res.json();
       window.tdeeGlobal = data.tdee;
-      document.getElementById('tdee-result').innerText = `Your TDEE: ${Math.round(data.tdee)} kcal/day`;
+      document.getElementById("tdee-result").innerText = Math.round(data.tdee);
     }
 
     async function calculateMacros() {
@@ -172,7 +177,10 @@
         body: JSON.stringify(body)
       });
       const data = await res.json();
-      document.getElementById('macro-result').innerText =
+      document.getElementById("macro-calories").innerText = `Calories: ${data.calories}`;
+      document.getElementById("macro-protein").innerText = `Protein: ${data.protein} g`;
+      document.getElementById("macro-fats").innerText = `Fats: ${data.fats} g`;
+      document.getElementById("macro-carbs").innerText = `Carbs: ${data.carbs} g`;
         `Calories: ${data.calories} | Protein: ${data.protein}g | Fats: ${data.fats}g | Carbs: ${data.carbs}g`;
     }
   </script>
