@@ -37,14 +37,14 @@
       margin-bottom: 1rem;
       color: #f6d393;
     }
-    input {
+    select {
       width: 100%;
       padding: 0.5rem;
       margin: 0.4rem 0;
       border-radius: 6px;
-      border: 1px solid #ccc;
-      background: #222;
-      color: white;
+      border: 1px solid #f6d393;
+      background: #000;
+      color: #f6d393;
       font-family: 'Libre Baskerville', serif;
     }
     button {
@@ -81,32 +81,73 @@
   <h1>Yucatán Strength Tools</h1>
 
   <div class="tool-card">
-    <h2>Yucatán Health Score</h2>
-    <input type="number" id="weight" placeholder="Weight (kg)" />
-    <input type="number" id="height" placeholder="Height (cm)" />
-    <input type="number" id="waist" placeholder="Waist (cm)" />
-    <input type="number" id="hips" placeholder="Hips (cm)" />
-    <input type="number" id="sleep" placeholder="Sleep (hrs)" />
-    <input type="number" id="water" placeholder="Water (liters)" />
-    <input type="number" id="hrv" placeholder="HRV (1–100)" />
-    <input type="number" id="mood" placeholder="Mood (1–10)" />
+    <h2>Yucatán Health Score <span style="font-size: 0.9rem">(Imperial)</span></h2>
+
+    <label>Weight (lbs)</label>
+    <select id="weight"></select>
+
+    <label>Height</label>
+    <select id="height-feet"></select>
+    <select id="height-inches"></select>
+
+    <label>Waist (inches)</label>
+    <select id="waist"></select>
+
+    <label>Hips (inches)</label>
+    <select id="hips"></select>
+
+    <label>Sleep (hours)</label>
+    <select id="sleep"></select>
+
+    <label>Water (liters)</label>
+    <select id="water"></select>
+
+    <label>HRV (tooltip) <span title="HRV = Heart Rate Variability. Higher = better recovery.">[?]</span></label>
+    <select id="hrv"></select>
+
+    <label>Mood (1-10)</label>
+    <select id="mood"></select>
+
     <button onclick="getHealthScore()">Calculate</button>
     <div class="result" id="health-result"></div>
     <div class="result" id="health-share"></div>
   </div>
 
   <div class="footer">
-    In Lak’Ech Ala K’in<br>
-    <a href="https://georgealuke.pythonanywhere.com" target="_blank">Apply for 1-on-1 fitness coaching →</a>
+    © 2025 Yucatán Strength — In Lak’Ech Ala K’in<br>
+    <a href="https://georgealuke.pythonanywhere.com" target="_blank">georgealuke.pythonanywhere.com</a>
   </div>
 
   <script>
+    function populateDropdown(id, start, end, step = 1, suffix = "") {
+      const el = document.getElementById(id);
+      for (let i = start; i <= end; i += step) {
+        const opt = document.createElement("option");
+        opt.value = i;
+        opt.text = i + suffix;
+        el.appendChild(opt);
+      }
+    }
+
+    populateDropdown("weight", 100, 350, 5, " lbs");
+    populateDropdown("height-feet", 4, 7, 1, "' ft");
+    populateDropdown("height-inches", 0, 11, 1, '" in');
+    populateDropdown("waist", 20, 60, 1, " in");
+    populateDropdown("hips", 20, 60, 1, " in");
+    populateDropdown("sleep", 0, 12, 1, " hrs");
+    populateDropdown("water", 0, 8, 1, " L");
+    populateDropdown("hrv", 10, 120, 1);
+    populateDropdown("mood", 1, 10, 1);
+
     async function getHealthScore() {
+      const feet = parseInt(document.getElementById('height-feet').value);
+      const inches = parseInt(document.getElementById('height-inches').value);
+      const height = (feet * 12 + inches) * 2.54;
       const body = {
-        weight: parseFloat(document.getElementById('weight').value),
-        height: parseFloat(document.getElementById('height').value),
-        waist: parseFloat(document.getElementById('waist').value),
-        hips: parseFloat(document.getElementById('hips').value),
+        weight: parseFloat(document.getElementById('weight').value) * 0.453592,
+        height: height,
+        waist: parseFloat(document.getElementById('waist').value) * 2.54,
+        hips: parseFloat(document.getElementById('hips').value) * 2.54,
         sleep: parseFloat(document.getElementById('sleep').value),
         water: parseFloat(document.getElementById('water').value),
         hrv: parseFloat(document.getElementById('hrv').value),
