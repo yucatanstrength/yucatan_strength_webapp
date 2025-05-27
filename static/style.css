@@ -1,34 +1,50 @@
 
 body {
     background-color: #000;
-    color: #fff;
-    font-family: 'Libre Baskerville', serif;
-    max-width: 960px;
-    margin: auto;
-    padding: 20px;
-}
-
-h1, h2, h3, h4, h5, h6 {
     font-family: 'League Spartan', sans-serif;
-    color: #f6d393;
+    color: white;
+    margin: 0;
+    padding: 0;
 }
 
-button, select, input {
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.tile {
     background-color: #111;
-    color: #fff;
-    border: 1px solid #f6d393;
-    padding: 10px;
-    margin: 5px 0;
-    font-size: 16px;
-    border-radius: 4px;
+    border: 2px solid #f6d393;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 0 10px rgba(246, 211, 147, 0.5);
+}
+
+h1, h2, h3 {
+    font-family: 'Libre Baskerville', serif;
+    color: #f6d393;
+    margin-bottom: 1rem;
+}
+
+select, button {
+    background-color: #111;
+    color: #f6d393;
+    border: 2px solid #f6d393;
+    border-radius: 0.5rem;
+    padding: 0.5rem;
+    font-size: 1rem;
 }
 
 .result-box {
-    background-color: #111;
-    border: 1px solid #f6d393;
-    padding: 10px;
-    margin-top: 10px;
-    color: #f6d393;
-    font-size: 18px;
+    background-color: #222;
+    padding: 1rem;
+    margin-top: 1rem;
+    border: 2px solid #f6d393;
+    border-radius: 0.5rem;
     font-weight: bold;
+    font-size: 1.2rem;
 }
