@@ -1,28 +1,28 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Yucatán Strength Calculators</title>
-    <script src="/static/js/main.js" defer></script>
+    <title>Yucatán Strength</title>
 </head>
-<body>
-    <h1>TDEE & Macro Calculator</h1>
-    <label>Sex:
-        <select id="sex">
+<body style="background-color:black; color:#f6d393; font-family:'Arial', sans-serif;">
+    <h1>TDEE Calculator</h1>
+    <label>Gender:
+        <select id="gender">
             <option>Male</option>
             <option>Female</option>
         </select>
-    </label>
+    </label><br>
     <label>Age:
-        <input type="number" id="age" value="23" min="13" max="120">
-    </label>
+        <input type="number" id="age" value="25">
+    </label><br>
     <label>Height (cm):
-        <input type="number" id="height" value="180">
-    </label>
+        <input type="number" id="height_cm" value="180">
+    </label><br>
     <label>Weight (kg):
-        <input type="number" id="weight" value="77">
-    </label>
-    <label>Activity Level:
+        <input type="number" id="weight_kg" value="75">
+    </label><br>
+    <label>Activity:
         <select id="activity">
             <option>Sedentary</option>
             <option>Lightly Active</option>
@@ -30,19 +30,26 @@
             <option>Active</option>
             <option>Very Active</option>
         </select>
-    </label>
+    </label><br>
+    <div id="tdee-output">TDEE: Awaiting input...</div>
+    <div id="bmr-output"></div>
+    <div id="activity-output"></div>
+
+    <h1>Macro Calculator</h1>
     <label>Goal:
         <select id="goal">
             <option>Maintain</option>
             <option>Cut</option>
             <option>Bulk</option>
         </select>
-    </label>
-    <h2>Results</h2>
-    <p id="tdee">TDEE: Awaiting input...</p>
-    <p id="calories">Calories: --</p>
-    <p id="protein">Protein: --g</p>
-    <p id="fats">Fats: --g</p>
-    <p id="carbs">Carbs: --g</p>
+    </label><br>
+    <div id="macro-output">
+        Calories: --<br>
+        Protein: --g<br>
+        Fats: --g<br>
+        Carbs: --g
+    </div>
+
+    <script src="/static/js/main.js"></script>
 </body>
 </html>
