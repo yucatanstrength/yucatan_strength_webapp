@@ -1,83 +1,48 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Yucatán Strength Tools</title>
-    <script>
-        async function updateTDEE() {
-            const sex = document.getElementById("sex").value;
-            const age = parseInt(document.getElementById("age").value);
-            const height = document.getElementById("height").value.split("|")[1].trim().split(" ")[0];
-            const weight = document.getElementById("weight").value.split("|")[1].trim().split(" ")[0];
-            const activity = document.getElementById("activity").value;
-
-            const res = await fetch("/tdee", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({
-                    sex: sex,
-                    age: age,
-                    height_cm: parseFloat(height),
-                    weight_kg: parseFloat(weight),
-                    activity: activity
-                })
-            });
-            const data = await res.json();
-            document.getElementById("tdee-result").innerText = "TDEE: " + data.tdee + " kcal";
-            updateMacros(data.tdee);
-        }
-
-        async function updateMacros(tdee) {
-            const goal = document.getElementById("goal").value;
-
-            const res = await fetch("/macros", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({tdee: tdee, goal: goal})
-            });
-            const data = await res.json();
-            document.getElementById("macro-result").innerHTML = 
-                "Calories: " + data.calories + "<br>" +
-                "Protein: " + data.protein + " g<br>" +
-                "Fats: " + data.fats + " g<br>" +
-                "Carbs: " + data.carbs + " g";
-        }
-    </script>
+    <meta charset="UTF-8">
+    <title>Yucatán Strength Calculators</title>
+    <script src="/static/js/main.js" defer></script>
 </head>
 <body>
-    <h1>Yucatán Strength Tools</h1>
-    <div>
-        <h2>TDEE Calculator</h2>
-        <select id="sex" onchange="updateTDEE()">
+    <h1>TDEE & Macro Calculator</h1>
+    <label>Sex:
+        <select id="sex">
             <option>Male</option>
             <option>Female</option>
         </select>
-        <select id="age" onchange="updateTDEE()">
-            <option>23 yrs</option>
-        </select>
-        <select id="height" onchange="updateTDEE()">
-            <option>6'1" | 185.42 cm</option>
-        </select>
-        <select id="weight" onchange="updateTDEE()">
-            <option>175 lbs | 79.38 kg</option>
-        </select>
-        <select id="activity" onchange="updateTDEE()">
+    </label>
+    <label>Age:
+        <input type="number" id="age" value="23" min="13" max="120">
+    </label>
+    <label>Height (cm):
+        <input type="number" id="height" value="180">
+    </label>
+    <label>Weight (kg):
+        <input type="number" id="weight" value="77">
+    </label>
+    <label>Activity Level:
+        <select id="activity">
             <option>Sedentary</option>
-            <option>Light</option>
-            <option>Moderate</option>
+            <option>Lightly Active</option>
+            <option>Moderately Active</option>
             <option>Active</option>
             <option>Very Active</option>
         </select>
-        <div id="tdee-result">TDEE: Awaiting input...</div>
-    </div>
-    <div>
-        <h2>Macro Calculator</h2>
-        <select id="goal" onchange="updateTDEE()">
+    </label>
+    <label>Goal:
+        <select id="goal">
             <option>Maintain</option>
             <option>Cut</option>
             <option>Bulk</option>
         </select>
-        <div id="macro-result">--</div>
-    </div>
+    </label>
+    <h2>Results</h2>
+    <p id="tdee">TDEE: Awaiting input...</p>
+    <p id="calories">Calories: --</p>
+    <p id="protein">Protein: --g</p>
+    <p id="fats">Fats: --g</p>
+    <p id="carbs">Carbs: --g</p>
 </body>
 </html>

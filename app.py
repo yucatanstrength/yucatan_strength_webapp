@@ -1,4 +1,3 @@
-
 from flask import Flask, render_template, request, jsonify
 from flask_cors import CORS
 
@@ -7,15 +6,16 @@ CORS(app)
 
 def calculate_bmr(sex, weight_kg, height_cm, age):
     if sex == "Male":
-        return (10 * weight_kg) + (6.25 * height_cm) - (5 * age) + 5
-    else:
-        return (10 * weight_kg) + (6.25 * height_cm) - (5 * age) - 161
+        return 10 * weight_kg + 6.25 * height_cm - 5 * age + 5
+    elif sex == "Female":
+        return 10 * weight_kg + 6.25 * height_cm - 5 * age - 161
+    return 0
 
 def calculate_tdee(bmr, activity_level):
     multipliers = {
         "Sedentary": 1.2,
-        "Light": 1.375,
-        "Moderate": 1.55,
+        "Lightly Active": 1.375,
+        "Moderately Active": 1.55,
         "Active": 1.725,
         "Very Active": 1.9
     }
@@ -26,36 +26,34 @@ def calculate_macros(tdee, goal):
         tdee -= 500
     elif goal == "Bulk":
         tdee += 500
-    protein = round(0.9 * tdee / 4)
-    fats = round(0.3 * tdee / 9)
+    protein = round(tdee * 0.3 / 4)
+    fats = round(tdee * 0.25 / 9)
     carbs = round((tdee - (protein * 4 + fats * 9)) / 4)
     return round(tdee), protein, fats, carbs
 
-@app.route("/")
+@app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
 
-@app.route("/tdee", methods=["POST"])
-def tdee():
+@app.route('/calculate', methods=['POST'])
+def calculate():
     data = request.json
-    bmr = calculate_bmr(data["sex"], data["weight_kg"], data["height_cm"], data["age"])
-    tdee = calculate_tdee(bmr, data["activity"])
-    return jsonify({
-        "bmr": round(bmr),
-        "tdee": round(tdee),
-        "cut": round(tdee - 500),
-        "bulk": round(tdee + 500)
-    })
-
-@app.route("/macros", methods=["POST"])
-def macros():
-    data = request.json
-    tdee = data["tdee"]
-    goal = data["goal"]
+    sex = data['sex']
+    age = int(data['age'])
+    height_cm = float(data['height_cm'])
+    weight_kg = float(data['weight_kg'])
+    activity = data['activity']
+    goal = data['goal']
+    bmr = calculate_bmr(sex, weight_kg, height_cm, age)
+    tdee = calculate_tdee(bmr, activity)
     tdee, protein, fats, carbs = calculate_macros(tdee, goal)
     return jsonify({
-        "calories": tdee,
+        "tdee": tdee,
+        "bmr": round(bmr),
         "protein": protein,
         "fats": fats,
         "carbs": carbs
     })
+
+if __name__ == '__main__':
+    app.run(debug=True)
