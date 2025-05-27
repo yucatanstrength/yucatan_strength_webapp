@@ -1,52 +1,83 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <title>Yucatán Strength Tools</title>
-    <link rel="stylesheet" href="/static/style.css">
-    <script defer src="/static/script.js"></script>
+    <script>
+        async function updateTDEE() {
+            const sex = document.getElementById("sex").value;
+            const age = parseInt(document.getElementById("age").value);
+            const height = document.getElementById("height").value.split("|")[1].trim().split(" ")[0];
+            const weight = document.getElementById("weight").value.split("|")[1].trim().split(" ")[0];
+            const activity = document.getElementById("activity").value;
+
+            const res = await fetch("/tdee", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({
+                    sex: sex,
+                    age: age,
+                    height_cm: parseFloat(height),
+                    weight_kg: parseFloat(weight),
+                    activity: activity
+                })
+            });
+            const data = await res.json();
+            document.getElementById("tdee-result").innerText = "TDEE: " + data.tdee + " kcal";
+            updateMacros(data.tdee);
+        }
+
+        async function updateMacros(tdee) {
+            const goal = document.getElementById("goal").value;
+
+            const res = await fetch("/macros", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({tdee: tdee, goal: goal})
+            });
+            const data = await res.json();
+            document.getElementById("macro-result").innerHTML = 
+                "Calories: " + data.calories + "<br>" +
+                "Protein: " + data.protein + " g<br>" +
+                "Fats: " + data.fats + " g<br>" +
+                "Carbs: " + data.carbs + " g";
+        }
+    </script>
 </head>
 <body>
-    <h1 class="section-title">Yucatán Strength Tools</h1>
-
-    <div class="container">
+    <h1>Yucatán Strength Tools</h1>
+    <div>
         <h2>TDEE Calculator</h2>
-        <select id="gender">
-            <option value="male">Male</option>
-            <option value="female">Female</option>
+        <select id="sex" onchange="updateTDEE()">
+            <option>Male</option>
+            <option>Female</option>
         </select>
-        <select id="age"></select>
-        <select id="height"></select>
-        <select id="weight"></select>
-        <select id="activity">
-            <option value="sedentary">Sedentary</option>
-            <option value="light">Lightly Active (1–3 days/week)</option>
-            <option value="moderate">Moderately Active (3–5 days/week)</option>
-            <option value="active">Active (6–7 days/week)</option>
-            <option value="Very Active">Very Active (Hard training or physical job)</option>
+        <select id="age" onchange="updateTDEE()">
+            <option>23 yrs</option>
         </select>
-        <div class="output-box" id="tdee-output">TDEE: Awaiting input...</div>
+        <select id="height" onchange="updateTDEE()">
+            <option>6'1" | 185.42 cm</option>
+        </select>
+        <select id="weight" onchange="updateTDEE()">
+            <option>175 lbs | 79.38 kg</option>
+        </select>
+        <select id="activity" onchange="updateTDEE()">
+            <option>Sedentary</option>
+            <option>Light</option>
+            <option>Moderate</option>
+            <option>Active</option>
+            <option>Very Active</option>
+        </select>
+        <div id="tdee-result">TDEE: Awaiting input...</div>
     </div>
-
-    <div class="container">
+    <div>
         <h2>Macro Calculator</h2>
-        <select id="goal">
-            <option value="cut">Cut</option>
-            <option value="maintain">Maintain</option>
-            <option value="bulk">Bulk</option>
+        <select id="goal" onchange="updateTDEE()">
+            <option>Maintain</option>
+            <option>Cut</option>
+            <option>Bulk</option>
         </select>
-        <div class="output-box" id="macro-output">
-            Calories: --<br>
-            Protein: -- g<br>
-            Fats: -- g<br>
-            Carbs: -- g
-        </div>
-    </div>
-
-    <div class="footer">
-        In Lak’Ech Ala K’in — <a href="https://georgealuke.pythonanywhere.com">Apply for 1-on-1 Coaching</a><br>
-        <small>This calculator uses the Mifflin-St Jeor formula, recommended by the American Council on Exercise (ACE) as the most accurate BMR estimation method.</small>
+        <div id="macro-result">--</div>
     </div>
 </body>
 </html>

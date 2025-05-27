@@ -5,70 +5,57 @@ from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
 
+def calculate_bmr(sex, weight_kg, height_cm, age):
+    if sex == "Male":
+        return (10 * weight_kg) + (6.25 * height_cm) - (5 * age) + 5
+    else:
+        return (10 * weight_kg) + (6.25 * height_cm) - (5 * age) - 161
+
+def calculate_tdee(bmr, activity_level):
+    multipliers = {
+        "Sedentary": 1.2,
+        "Light": 1.375,
+        "Moderate": 1.55,
+        "Active": 1.725,
+        "Very Active": 1.9
+    }
+    return bmr * multipliers.get(activity_level, 1.2)
+
+def calculate_macros(tdee, goal):
+    if goal == "Cut":
+        tdee -= 500
+    elif goal == "Bulk":
+        tdee += 500
+    protein = round(0.9 * tdee / 4)
+    fats = round(0.3 * tdee / 9)
+    carbs = round((tdee - (protein * 4 + fats * 9)) / 4)
+    return round(tdee), protein, fats, carbs
+
 @app.route("/")
 def index():
     return render_template("index.html")
 
 @app.route("/tdee", methods=["POST"])
 def tdee():
-    data = request.get_json()
-    gender = data["gender"]
-    age = int(data["age"])
-    height_cm = float(data["height"])
-    weight_kg = float(data["weight"])
-    activity = data["activity"]
-
-    if gender == "male":
-        bmr = 10 * weight_kg + 6.25 * height_cm - 5 * age + 5
-    else:
-        bmr = 10 * weight_kg + 6.25 * height_cm - 5 * age - 161
-
-    multiplier_map = {
-        "sedentary": 1.2,
-        "light": 1.375,
-        "moderate": 1.55,
-        "active": 1.725,
-        "Very Active": 1.9
-    }
-
-    multiplier = multiplier_map.get(activity, 1.2)
-    tdee_val = round(bmr * multiplier)
-    bmr = round(bmr)
-
+    data = request.json
+    bmr = calculate_bmr(data["sex"], data["weight_kg"], data["height_cm"], data["age"])
+    tdee = calculate_tdee(bmr, data["activity"])
     return jsonify({
-        "tdee": tdee_val,
-        "bmr": bmr,
-        "multiplier": multiplier,
-        "activity_label": activity,
-        "cut": tdee_val - 500,
-        "bulk": tdee_val + 500
+        "bmr": round(bmr),
+        "tdee": round(tdee),
+        "cut": round(tdee - 500),
+        "bulk": round(tdee + 500)
     })
 
 @app.route("/macros", methods=["POST"])
 def macros():
-    data = request.get_json()
-    tdee = int(data["tdee"])
+    data = request.json
+    tdee = data["tdee"]
     goal = data["goal"]
-    weight = float(data["weight"])
-    gender = data["gender"]
-
-    if goal == "cut":
-        calories = tdee - 500
-    elif goal == "bulk":
-        calories = tdee + 500
-    else:
-        calories = tdee
-
-    protein = round(weight * 1.1)
-    fats = round((0.25 * calories) / 9)
-    carbs = round((calories - (protein * 4 + fats * 9)) / 4)
-
+    tdee, protein, fats, carbs = calculate_macros(tdee, goal)
     return jsonify({
-        "calories": calories,
+        "calories": tdee,
         "protein": protein,
         "fats": fats,
         "carbs": carbs
     })
-
-if __name__ == "__main__":
-    app.run(debug=True)
