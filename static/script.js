@@ -16,6 +16,8 @@ function recalculate() {
     const activity = getSelectedValue("activity");
     const goal = getSelectedValue("goal");
 
+    console.log("Calculating with:", { gender, age, height, weight, activity, goal });
+
     fetch("/tdee", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -55,8 +57,8 @@ function populateDropdown(id, values) {
 document.addEventListener("DOMContentLoaded", () => {
     const ages = Array.from({length: 108}, (_, i) => `${i + 13} yrs`);
     const heights = Array.from({length: 32}, (_, i) => {
-        const ft = Math.floor((i + 0) / 12) + 4;
-        const inch = (i + 0) % 12;
+        const ft = Math.floor(i / 12) + 4;
+        const inch = i % 12;
         const totalInches = ft * 12 + inch;
         const cm = (totalInches * 2.54).toFixed(2);
         return `${ft}'${inch}" | ${cm} cm`;
@@ -74,4 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ["gender", "age", "height", "weight", "activity", "goal"].forEach(id => {
         document.getElementById(id).addEventListener("change", recalculate);
     });
+
+    recalculate();  // initial load
 });
