@@ -1,0 +1,39 @@
+
+body {
+    background-color: #000;
+    color: #f6d393;
+    font-family: 'Libre Baskerville', serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+}
+h1, h2 {
+    font-family: 'League Spartan', sans-serif;
+}
+.container {
+    padding: 2rem;
+}
+.calculator {
+    background-color: #111;
+    margin: 2rem auto;
+    padding: 1.5rem;
+    border: 1px solid #f6d393;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 600px;
+}
+label, select, input {
+    display: block;
+    margin: 0.5rem auto;
+    font-size: 1rem;
+    background-color: #000;
+    color: #f6d393;
+}
+footer {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+}
+a {
+    color: #f6d393;
+    text-decoration: underline;
+}
