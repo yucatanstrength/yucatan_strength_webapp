@@ -1,48 +1,34 @@
 
-document.addEventListener('DOMContentLoaded', function () {
-    const inputs = document.querySelectorAll('select, input');
+document.addEventListener("DOMContentLoaded", () => {
+    const gender = document.getElementById("gender");
+    const age = document.getElementById("age");
+    const height = document.getElementById("height");
+    const weight = document.getElementById("weight");
+    const activity = document.getElementById("activity");
+    const tdeeValue = document.getElementById("tdee-value");
 
-    inputs.forEach(input => input.addEventListener('change', calculateAll));
+    const recalculate = () => {
+        const heightVal = height.value.split("|")[1].trim().split(" ")[0];
+        const weightVal = weight.value.split("|")[1].trim().split(" ")[0];
 
-    function calculateAll() {
-        const gender = document.getElementById("gender").value;
-        const age = document.getElementById("age").value;
-        const height_cm = document.getElementById("height_cm").value;
-        const weight_kg = document.getElementById("weight_kg").value;
-        const activity = document.getElementById("activity").value;
-        const goal = document.getElementById("goal").value;
-
-        fetch('/tdee', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({gender, age, height_cm, weight_kg, activity})
+        fetch("/tdee", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                gender: gender.value,
+                age: age.value,
+                height_cm: heightVal,
+                weight_kg: weightVal,
+                activity_level: activity.value,
+            }),
         })
         .then(res => res.json())
         .then(data => {
-            document.getElementById("tdee-output").textContent = `TDEE: ${data.tdee} kcal`;
-            document.getElementById("bmr-output").textContent = `BMR: ${data.bmr} kcal`;
-            document.getElementById("activity-output").textContent = `Activity Multiplier: ${data.multiplier} (${data.activity})`;
-
-            fetch('/macros', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    goal,
-                    weight_kg,
-                    tdee: data.tdee
-                })
-            })
-            .then(res => res.json())
-            .then(macro => {
-                document.getElementById("macro-output").innerHTML = `
-                    Calories: ${macro.calories}<br>
-                    Protein: ${macro.protein}g<br>
-                    Fats: ${macro.fats}g<br>
-                    Carbs: ${macro.carbs}g
-                `;
-            });
+            tdeeValue.textContent = data.tdee + " kcal/day";
         });
-    }
+    };
 
-    calculateAll(); // Initial load
+    [gender, age, height, weight, activity].forEach(el => el.addEventListener("change", recalculate));
 });

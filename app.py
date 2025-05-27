@@ -10,14 +10,15 @@ def index():
     return render_template("index.html")
 
 @app.route("/tdee", methods=["POST"])
-def calculate_tdee():
+def tdee():
     data = request.get_json()
-    gender = data["gender"]
-    age = int(data["age"])
-    height_cm = float(data["height_cm"])
-    weight_kg = float(data["weight_kg"])
-    activity = data["activity"]
+    gender = data.get("gender")
+    age = int(data.get("age"))
+    height_cm = float(data.get("height_cm"))
+    weight_kg = float(data.get("weight_kg"))
+    activity_level = data.get("activity_level")
 
+    # Activity multipliers
     multipliers = {
         "Sedentary": 1.2,
         "Lightly Active": 1.375,
@@ -26,44 +27,14 @@ def calculate_tdee():
         "Very Active": 1.9
     }
 
+    # BMR calculation using Mifflin-St Jeor
     if gender == "Male":
-        bmr = (10 * weight_kg) + (6.25 * height_cm) - (5 * age) + 5
+        bmr = 10 * weight_kg + 6.25 * height_cm - 5 * age + 5
     else:
-        bmr = (10 * weight_kg) + (6.25 * height_cm) - (5 * age) - 161
+        bmr = 10 * weight_kg + 6.25 * height_cm - 5 * age - 161
 
-    tdee = round(bmr * multipliers[activity])
-    bmr = round(bmr)
-
-    return jsonify({
-        "tdee": tdee,
-        "bmr": bmr,
-        "multiplier": multipliers[activity],
-        "activity": activity
-    })
-
-@app.route("/macros", methods=["POST"])
-def calculate_macros():
-    data = request.get_json()
-    goal = data["goal"]
-    tdee = int(data["tdee"])
-
-    if goal == "Cut":
-        calories = tdee - 500
-    elif goal == "Bulk":
-        calories = tdee + 500
-    else:
-        calories = tdee
-
-    protein = round((1.0 * data["weight_kg"]) * 2.2)
-    fats = round((0.4 * data["weight_kg"]) * 2.2)
-    carbs = round((calories - (protein * 4 + fats * 9)) / 4)
-
-    return jsonify({
-        "calories": calories,
-        "protein": protein,
-        "fats": fats,
-        "carbs": carbs
-    })
+    tdee_value = int(bmr * multipliers[activity_level])
+    return jsonify({"tdee": tdee_value})
 
 if __name__ == "__main__":
     app.run(debug=True)
