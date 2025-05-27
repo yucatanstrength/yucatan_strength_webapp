@@ -14,25 +14,36 @@ def tdee():
     data = request.get_json()
     gender = data.get("gender")
     age = data.get("age")
-    height = data.get("height")
-    weight = data.get("weight")
+    height_cm = data.get("height")
+    weight_kg = data.get("weight")
     activity = data.get("activity")
 
     if gender == "male":
-        bmr = 10 * weight + 6.25 * height - 5 * age + 5
+        bmr = 10 * weight_kg + 6.25 * height_cm - 5 * age + 5
     else:
-        bmr = 10 * weight + 6.25 * height - 5 * age - 161
+        bmr = 10 * weight_kg + 6.25 * height_cm - 5 * age - 161
 
-    multiplier = {
-        "sedentary": 1.2,
-        "light": 1.375,
-        "moderate": 1.55,
-        "active": 1.725,
-        "Very Active": 1.9
-    }.get(activity, 1.55)
+    activity_map = {
+        "sedentary": ("Sedentary", 1.2),
+        "light": ("Lightly active (1–3 days/week)", 1.375),
+        "moderate": ("Moderately active (3–5 days/week)", 1.55),
+        "active": ("Active (6–7 days/week)", 1.725),
+        "Very Active": ("Very active (hard training or physical job)", 1.9)
+    }
 
-    tdee = round(bmr * multiplier)
-    return jsonify({"tdee": tdee})
+    activity_label, multiplier = activity_map.get(activity, ("Moderate", 1.55))
+    tdee_val = round(bmr * multiplier)
+    cut = tdee_val - 500
+    bulk = tdee_val + 500
+
+    return jsonify({
+        "tdee": int(tdee_val),
+        "bmr": int(round(bmr)),
+        "multiplier": multiplier,
+        "activity_label": activity_label,
+        "cut": cut,
+        "bulk": bulk
+    })
 
 @app.route("/macros", methods=["POST"])
 def macros():
