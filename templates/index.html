@@ -1,11 +1,123 @@
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Yucatán Strength Tools</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #f6d393;
+      font-family: 'League Spartan', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    .card {
+      border: 1px solid #f6d393;
+      border-radius: 12px;
+      padding: 20px;
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 30px;
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background-color: black;
+      color: #f6d393;
+      border: 1px solid #f6d393;
+      border-radius: 8px;
+      font-family: Arial, sans-serif;
+    }
+    .output {
+      background-color: #111;
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 10px;
+      border: 1px solid #f6d393;
+    }
+    footer {
+      margin-top: 50px;
+      font-size: 14px;
+      color: #f6d393;
+      font-family: 'League Spartan', sans-serif;
+    }
+    a {
+      color: #f6d393;
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
   <h1>Yucatán Strength Tools</h1>
-  <p>This is the test index.html loaded from /templates directory.</p>
+  <div class="card">
+    <h2>TDEE Calculator</h2>
+    <select id="gender"><option>Male</option><option>Female</option></select>
+    <select id="age"><option>23 yrs</option></select>
+    <select id="height"><option>6'1" | 185.42 cm</option></select>
+    <select id="weight"><option>175 lbs | 79.38 kg</option></select>
+    <select id="activity">
+      <option value="sedentary">Sedentary</option>
+      <option value="light">Light</option>
+      <option value="moderate">Moderate</option>
+      <option value="active">Active</option>
+      <option value="Very Active">Very Active</option>
+    </select>
+    <div class="output" id="tdee-output">TDEE: Awaiting input...</div>
+  </div>
+  <div class="card">
+    <h2>Macro Calculator</h2>
+    <select id="goal">
+      <option value="cut">Cut</option>
+      <option value="maintain">Maintain</option>
+      <option value="bulk">Bulk</option>
+    </select>
+    <div class="output" id="macro-output">
+      Calories: --<br/>
+      Protein: -- g<br/>
+      Fats: -- g<br/>
+      Carbs: -- g
+    </div>
+  </div>
+  <footer>
+    In Lak’Ech Ala K’in<br/>
+    <a href="https://georgealuke.pythonanywhere.com/">Apply for 1-on-1 Coaching</a>
+  </footer>
+  <script>
+    const tdeeBox = document.getElementById('tdee-output');
+    const macroBox = document.getElementById('macro-output');
+    function getDropdownValue(id) {
+      const val = document.getElementById(id).value;
+      return val.includes("|") ? parseFloat(val.split("|")[1]) : val;
+    }
+    async function recalc() {
+      const gender = document.getElementById('gender').value.toLowerCase();
+      const age = parseInt(getDropdownValue('age'));
+      const height = parseFloat(getDropdownValue('height'));
+      const weight = parseFloat(getDropdownValue('weight'));
+      const activity = document.getElementById('activity').value;
+      const goal = document.getElementById('goal').value;
+      const tdeeRes = await fetch('/tdee', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({gender, age, height, weight, activity})
+      });
+      const tdeeData = await tdeeRes.json();
+      tdeeBox.innerText = `TDEE: ${tdeeData.tdee} cal`;
+      const macroRes = await fetch('/macros', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({tdee: tdeeData.tdee, weight, gender, goal})
+      });
+      const macroData = await macroRes.json();
+      macroBox.innerHTML = `Calories: ${macroData.calories} cal<br/>Protein: ${macroData.protein} g<br/>Fats: ${macroData.fats} g<br/>Carbs: ${macroData.carbs} g`;
+    }
+    ['gender','age','height','weight','activity','goal'].forEach(id =>
+      document.getElementById(id).addEventListener('change', recalc));
+  </script>
 </body>
 </html>
