@@ -37,3 +37,10 @@ a {
     color: #f6d393;
     text-decoration: underline;
 }
+
+/* Ensure form labels and results use League Spartan */
+label,
+.output-container,
+footer {
+    font-family: 'League Spartan', sans-serif !important;
+}
