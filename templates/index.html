@@ -2,42 +2,33 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Yucatán Strength TDEE</title>
-    <script>
-        async function updateTDEE() {
-            const sex = document.getElementById("sex").value;
-            const age = document.getElementById("age").value;
-            const height = document.getElementById("height").value;
-            const weight = document.getElementById("weight").value;
-            const activity = document.getElementById("activity").value;
-
-            const response = await fetch("/calculate", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify({sex, age, height, weight, activity})
-            });
-
-            const data = await response.json();
-            document.getElementById("tdee").textContent = data.tdee + " kcal/day";
-        }
-    </script>
+    <title>Yucatán Strength TDEE Calculator</title>
+    <script src="/static/script.js" defer></script>
 </head>
 <body>
-    <h1>Yucatán Strength TDEE Calculator</h1>
-    <select id="sex" onchange="updateTDEE()">
-        <option>Male</option>
-        <option>Female</option>
-    </select>
-    <input id="age" type="number" value="23" onchange="updateTDEE()" />
-    <input id="height" type="number" value="70" onchange="updateTDEE()" />
-    <input id="weight" type="number" value="170" onchange="updateTDEE()" />
-    <select id="activity" onchange="updateTDEE()">
-        <option>Sedentary</option>
-        <option>Lightly active</option>
-        <option>Moderately active</option>
-        <option>Active</option>
-        <option>Very active</option>
-    </select>
-    <div><strong>TDEE:</strong> <span id="tdee">Awaiting input...</span></div>
+    <h1>TDEE Calculator</h1>
+    <label>Gender:
+        <select id="gender">
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+    </label>
+    <label>Age: <input type="number" id="age" value="25"></label>
+    <label>Height (cm): <input type="number" id="height" value="175"></label>
+    <label>Weight (kg): <input type="number" id="weight" value="75"></label>
+    <label>Activity:
+        <select id="activity">
+            <option value="1.2">Sedentary</option>
+            <option value="1.375">Lightly active</option>
+            <option value="1.55">Moderately active</option>
+            <option value="1.725">Very active</option>
+            <option value="1.9">Extra active</option>
+        </select>
+    </label>
+    <p>TDEE: <span id="tdee-result">Awaiting input...</span></p>
+    <p>Calories: <span id="calories">--</span></p>
+    <p>Protein: <span id="protein">--g</span></p>
+    <p>Fats: <span id="fats">--g</span></p>
+    <p>Carbs: <span id="carbs">--g</span></p>
 </body>
 </html>
