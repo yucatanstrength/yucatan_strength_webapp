@@ -44,7 +44,7 @@
                 </select>
             </label>
             <div id="macrosResult">
-                <p>Calories: --kcal/day</p>
+                <p>Calories: --calories/day</p>
                 <p>Protein: --g</p>
                 <p>Fats: --g</p>
                 <p>Carbs: --g</p>
@@ -72,7 +72,7 @@ function recalculate() {
     .then(res => res.json())
     .then(data => {
         const tdee = data.tdee;
-        document.getElementById("tdeeResult").textContent = "TDEE: " + tdee;
+        document.getElementById("tdeeResult").textContent = "TDEE (calories): " + tdee;
         const goal = document.getElementById("goal").value;
         fetch("/macros", {
             method: "POST",
@@ -82,7 +82,7 @@ function recalculate() {
         .then(res => res.json())
         .then(data => {
             document.getElementById("macrosResult").innerHTML = `
-                <p>Calories: ${data.calories}</p>
+                <p>Calories: ${data.calories}/day</p>
                 <p>Protein: ${data.protein}g</p>
                 <p>Fats: ${data.fats}g</p>
                 <p>Carbs: ${data.carbs}g</p>
